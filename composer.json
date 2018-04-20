@@ -1,0 +1,27 @@
+{
+    "name": "sctr/rocketgate-php-sdk",
+    "description": "PHP Library for Rocketgate's gateway",
+    "license": "Apache V2",
+    "authors": [
+        {
+            "name": "Thomas Picquet",
+            "email": "thomas@sctr.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "RocketGate\\Sdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RocketGate\\Sdk\\Test\\": "test/"
+        }
+    },
+    "require": {
+        "php": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    }
+}
