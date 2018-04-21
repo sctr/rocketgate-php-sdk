@@ -22,7 +22,6 @@
  * whatsoever arising out of or in connection with the use or performance of this software,
  * including, without limitation, damages resulting from loss of use, data or profits, and
  * whether or not advised of the possibility of damage, regardless of the theory of liability.
- *
  */
 
 namespace RocketGate\Sdk;
