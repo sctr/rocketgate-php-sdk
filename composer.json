@@ -1,7 +1,7 @@
 {
     "name": "sctr/rocketgate-php-sdk",
     "description": "PHP Library for Rocketgate's gateway",
-    "license": "Apache V2",
+    "license": "MIT",
     "authors": [
         {
             "name": "Thomas Picquet",
