@@ -554,33 +554,13 @@ class GatewayService extends GatewayAbstract
     public function performCURLTransaction(string $host, GatewayRequest $request, GatewayResponse $response)
     {
         $response->reset();
-        $requestBytes = $request->toXMLString();
 
-        $urlServlet  = $request->get('gatewayServlet');
-        $urlProtocol = $request->get('gatewayProtocol');
-        $urlPortNo   = $request->get('gatewayPortNo');
-
-        if (empty($urlServlet)) {
-            $urlServlet = $this->rocketGateServlet;
-        }
-        if (empty($urlProtocol)) {
-            $urlProtocol = $this->rocketGateProtocol;
-        }
-        if (empty($urlPortNo)) {
-            $urlPortNo = $this->rocketGatePortNo;
-        }
-
-        $url = $urlProtocol.'://'.$host.':'.$urlPortNo.'/'.$urlServlet;
-
-        $connectTimeout = $request->get('gatewayConnectTimeout');
-        $readTimeout    = $request->get('gatewayReadTimeout');
-
-        if (empty($connectTimeout)) {
-            $connectTimeout = $this->rocketGateConnectTimeout;
-        }
-        if (empty($readTimeout)) {
-            $readTimeout = $this->rocketGateReadTimeout;
-        }
+        $requestBytes   = $request->toXMLString();
+        $url            = $this->getGatewayUrl($host, $request);
+        $connectTimeout = !empty($request->get('gatewayConnectTimeout')) ? $request->get('gatewayConnectTimeout') :
+            $this->rocketGateConnectTimeout;
+        $readTimeout    = !empty($request->get('gatewayReadTimeout')) ? $request->get('gatewayReadTimeout') :
+            $this->rocketGateReadTimeout;
 
         if (!$handle = curl_init()) {
             $response->set(GatewayResponse::exception(), 'curl_init() error');
@@ -642,5 +622,23 @@ class GatewayService extends GatewayAbstract
         $response->setFromXML($results);
 
         return (int) $response->get(GatewayResponse::responseCode());
+    }
+
+    /**
+     * @param string         $host
+     * @param GatewayRequest $request
+     *
+     * @return string
+     */
+    private function getGatewayUrl(string $host, GatewayRequest $request)
+    {
+        $urlServlet  = !empty($request->get('gatewayServlet')) ? $request->get('gatewayServlet') :
+            $this->rocketGateServlet;
+        $urlProtocol = !empty($request->get('gatewayProtocol')) ? $request->get('gatewayProtocol') :
+            $this->rocketGateProtocol;
+        $urlPortNo   = !empty($request->get('gatewayPortNo')) ? $request->get('gatewayPortNo') :
+            $this->rocketGatePortNo;;
+
+        return $urlProtocol.'://'.$host.':'.$urlPortNo.'/'.$urlServlet;
     }
 }
