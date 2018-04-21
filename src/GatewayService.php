@@ -379,10 +379,8 @@ class GatewayService extends GatewayAbstract
     {
         $this->prepareRequest($request);
 
-        $serverName = $request->get('gatewayServer');
-        if (empty($serverName)) {
-            $serverName = $this->rocketGateHost;
-        }
+        $serverName = (!empty($request->get('gatewayServer'))) ?
+            $request->get('gatewayServer') : $this->rocketGateHost;
 
         if (strcmp($serverName, 'gateway.rocketgate.com') !== 0) {
             $hostList = [$serverName];
@@ -416,11 +414,11 @@ class GatewayService extends GatewayAbstract
 
         for ($index = 0; $index < $listSize; $index++) {
             $results = $this->performCURLTransaction($hostList[$index], $request, $response);
-            if ($results === self::RESPONSE_SUCCESS) {
+            if ((int) $results === self::RESPONSE_SUCCESS) {
                 return true;
             }
 
-            if ($results !== self::RESPONSE_SYSTEM_ERROR) {
+            if ((int) $results !== self::RESPONSE_SYSTEM_ERROR) {
                 return false;
             }
 
@@ -487,17 +485,14 @@ class GatewayService extends GatewayAbstract
         $request->clear(GatewayRequest::failedReasonCode());
         $request->clear(GatewayRequest::failedGuid());
 
-        $fullURL = $request->get('gatewayURL');
-        if (empty($fullURL)) {
-            $fullURL = $request->get('embeddedFieldsToken');
-        }
+        $fullUrl = (!empty($request->get('gatewayURL'))) ?
+            $request->get('gatewayURL') : $request->get('embeddedFieldsToken');
 
-        if (!empty($fullURL)) {
-            $urlBits = parse_url($fullURL); // Split the URL
+        if (!empty($fullUrl)) {
+            $urlBits = parse_url($fullUrl); // Split the URL
             if (empty($request->get('gatewayServer'))) {
                 $request->set('gatewayServer', $urlBits['host']);
             }
-
             $request->set('gatewayProtocol', $urlBits['scheme']);
             if (array_key_exists('port', $urlBits)) {
                 $request->set('gatewayPortNo', $urlBits['port']);
