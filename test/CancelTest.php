@@ -5,16 +5,34 @@ namespace RocketGate\Sdk\Test;
 use RocketGate\Sdk\GatewayRequest;
 use RocketGate\Sdk\GatewayResponse;
 
-class AuthOnlyTest extends AbstractTestCase
+class CancelTest extends AbstractTestCase
 {
+    /**
+     * @var string
+     */
+    protected $customerId;
+
+    /**
+     * @var string
+     */
+    protected $invoiceId;
+
+    /**
+     * @inheritdoc
+     */
     public function setUp()
     {
         parent::setUp();
+
         $time = time();
-        $this->request->set(GatewayRequest::merchantCustomerId(), $time . '.PHPTest');
-        $this->request->set(GatewayRequest::merchantInvoiceId(), $time . '.AuthOnlyTest');
+        $this->customerId = $time.'.PHPTest';
+        $this->invoiceId  = $time.'.CancelTest';
+
+        $this->request->set(GatewayRequest::merchantCustomerId(), $this->customerId);
+        $this->request->set(GatewayRequest::merchantInvoiceId(), $this->invoiceId);
 
         $this->request->set(GatewayRequest::amount(), '9.99');
+        $this->request->set(GatewayRequest::rebillFrequency(), 'MONTHLY');
         $this->request->set(GatewayRequest::currency(), 'USD');
         $this->request->set(GatewayRequest::cardNo(), '4111111111111111');
         $this->request->set(GatewayRequest::expireMonth(), '02');
@@ -40,11 +58,19 @@ class AuthOnlyTest extends AbstractTestCase
     /**
      * @test
      */
-    public function performAuthOnlyTest()
+    public function performRebillCancelTest()
     {
-        $test = $this->service->performAuthOnly($this->request, $this->response);
+        if ($this->service->performPurchase($this->request, $this->response)) {
+            $cancel = new GatewayRequest();
+            $cancel->set(GatewayRequest::merchantId(), $this->merchantId);
+            $cancel->set(GatewayRequest::merchantPassword(), $this->merchantPassword);
+            $cancel->set(GatewayRequest::merchantCustomerId(), $this->customerId);
+            $cancel->set(GatewayRequest::merchantInvoiceId(), $this->invoiceId);
 
-        $this->assertTrue($test);
-        $this->assertEquals(0, $this->response->get(GatewayResponse::reasonCode()));
+            $test = $this->service->performRebillCancel($cancel, $this->response);
+
+            $this->assertTrue($test);
+            $this->assertNotNull($this->response->get(GatewayResponse::rebillEndDate()));
+        }
     }
 }
