@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/sctr/rocketgate-php-sdk.svg?branch=master)](https://travis-ci.org/sctr/rocketgate-php-sdk)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sctr/rocketgate-php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sctr/rocketgate-php-sdk/?branch=master)
 
 Rocketgate PHP SDK
 ===========

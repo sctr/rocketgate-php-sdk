@@ -299,11 +299,11 @@ class GatewayService extends GatewayAbstract
         if ($testFlag) {
             $this->rocketGateHost     = 'dev-gateway.rocketgate.com';
             $this->rocketGateProtocol = 'https';
-            $this->rocketGatePortNo   = '443';
+            $this->rocketGatePortNo   = 443;
         } else {
             $this->rocketGateHost     = 'gateway.rocketgate.com';
             $this->rocketGateProtocol = 'https';
-            $this->rocketGatePortNo   = '443';
+            $this->rocketGatePortNo   = 443;
         }
     }
 
@@ -549,7 +549,7 @@ class GatewayService extends GatewayAbstract
      * @param GatewayRequest  $request
      * @param GatewayResponse $response
      *
-     * @return bool
+     * @return int
      */
     public function performCURLTransaction(string $host, GatewayRequest $request, GatewayResponse $response)
     {
@@ -641,6 +641,6 @@ class GatewayService extends GatewayAbstract
         curl_close($handle);
         $response->setFromXML($results);
 
-        return $response->get(GatewayResponse::responseCode());
+        return (int) $response->get(GatewayResponse::responseCode());
     }
 }
