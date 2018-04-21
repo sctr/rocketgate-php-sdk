@@ -73,4 +73,32 @@ class CancelTest extends AbstractTestCase
             $this->assertNotNull($this->response->get(GatewayResponse::rebillEndDate()));
         }
     }
+
+    /**
+     * @test
+     */
+    public function checkRebillStatusTest()
+    {
+        if ($this->service->performPurchase($this->request, $this->response)) {
+            $cancel = new GatewayRequest();
+            $cancel->set(GatewayRequest::merchantId(), $this->merchantId);
+            $cancel->set(GatewayRequest::merchantPassword(), $this->merchantPassword);
+            $cancel->set(GatewayRequest::merchantCustomerId(), $this->customerId);
+            $cancel->set(GatewayRequest::merchantInvoiceId(), $this->invoiceId);
+
+            if ($this->service->performRebillCancel($cancel, $this->response)) {
+                $request = new GatewayRequest();
+                $request->set(GatewayRequest::merchantId(), $this->merchantId);
+                $request->set(GatewayRequest::merchantPassword(), $this->merchantPassword);
+                $request->set(GatewayRequest::merchantCustomerId(), $this->customerId);
+                $request->set(GatewayRequest::merchantInvoiceId(), $this->invoiceId);
+
+                if ($this->service->performRebillUpdate($request, $this->response)) {
+                    $this->assertNotNull($this->response->get(GatewayResponse::rebillEndDate()));
+                } else {
+                    $this->assertNotNull($this->response->get(GatewayResponse::reasonCode()));
+                }
+            }
+        }
+    }
 }

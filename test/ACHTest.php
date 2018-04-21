@@ -3,7 +3,6 @@
 namespace RocketGate\Sdk\Test;
 
 use RocketGate\Sdk\GatewayRequest;
-use RocketGate\Sdk\GatewayResponse;
 
 class ACHTest extends AbstractTestCase
 {
