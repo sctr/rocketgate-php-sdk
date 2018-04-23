@@ -93,39 +93,14 @@ abstract class GatewayAbstract
     /**
      * @var string
      */
-    public $checksum = '';
+    public $versionNo = 'P6.3m';
 
-    /**
-     * @var string
-     */
-    public $baseChecksum = 'f0286c49b8750b78ebadb95cb2469337';
-
-    /**
-     * @var string
-     */
-    public $versionNo = 'P6.3';
-
-    public function setVersion()
-    {
-        $dirName    = dirname(__FILE__);
-        $baseString = md5_file($dirName.'/GatewayService.php').md5_file($dirName.'/GatewayRequest.php');
-        $baseString .= md5_file($dirName.'/GatewayResponse.php').md5_file($dirName.'/GatewayParameterList.php');
-
-        $this->checksum = md5($baseString);
-        if ($this->checksum !== $this->baseChecksum) {
-            $this->versionNo = 'P6.3m';
-        }
-    }
 
     /**
      * @return string
      */
     public function getVersion()
     {
-        if (empty($this->checksum)) {
-            $this->setVersion();
-        }
-
         return $this->versionNo;
     }
 }
