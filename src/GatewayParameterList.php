@@ -86,12 +86,4 @@ class GatewayParameterList extends GatewayAbstract
             unset($this->params[$key]);
         }
     }
-
-    /**
-     * Dump the contents of the object for debugging.
-     */
-    public function debugPrint()
-    {
-        print_r($this->params);
-    }
 }
