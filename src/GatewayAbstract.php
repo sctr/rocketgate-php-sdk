@@ -95,7 +95,6 @@ abstract class GatewayAbstract
      */
     public $versionNo = 'P6.3m';
 
-
     /**
      * @return string
      */
