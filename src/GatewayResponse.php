@@ -147,6 +147,14 @@ class GatewayResponse extends GatewayParameterList
     /**
      * @return string
      */
+    public static function cardBin()
+    {
+        return 'cardBin';
+    }
+
+    /**
+     * @return string
+     */
     public static function cardLastFour()
     {
         return 'cardLastFour';
